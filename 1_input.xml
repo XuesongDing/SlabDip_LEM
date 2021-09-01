@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<badlands xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <!-- Regular grid structure -->
+    <grid>
+        <!-- Digital elevation model file path -->
+        <demfile>data/flat.csv</demfile>
+        <!-- Optional parameter (integer) used to decrease TIN resolution.
+             The default value is set to 1. Increasing the factor
+             value will multiply the digital elevation model resolution
+             accordingly.  -->
+        <resfactor>1</resfactor>
+        <!-- Boundary type: flat, slope, fixed or wall -->
+        <boundary>slope</boundary>
+        <!-- Optional parameter (integer) used to force depression-less
+             surface at the start of the simulation. The default value is 0
+             to turn the option off, put it to 1 to enable it. -->
+        <nopit>0</nopit>
+    </grid>
+
+    <!-- Simulation time structure -->
+    <time>
+        <!-- Simulation start time [a] -->
+        <start>0</start>
+        <!-- Simulation end time [a] -->
+        <end>30000000.</end>
+        <!-- Display interval [a] -->
+        <display>1000000.</display>
+    </time>
+
+    <!-- Simulation stratigraphic structure -->
+    <strata>
+        <!-- Stratal grid resolution [m] -->
+        <stratdx>1000</stratdx>
+        <!-- Stratal layer interval [a] -->
+        <laytime>1000000.</laytime>
+    </strata>
+
+    <!-- Sea-level structure -->
+    <sea>
+        <!-- Relative sea-level position [m] -->
+        <position>0.</position>
+        <!-- Sea-level curve - (optional) -->
+        <!--curve>data/sealevel.csv</curve -->
+    </sea>
+
+    <!-- Tectonic structure -->
+    <tectonic>
+        <!-- Number of tectonic events -->
+        <events>3</events>
+        <!-- Displacement definition -->
+        <disp>
+           <dstart>0</dstart>
+           <dend>7500000</dend>
+           <dfile>data/LinearSlab_drho20_30Degree_250km.csv</dfile>
+        </disp>
+        <disp>
+           <dstart>7500000</dstart>
+           <dend>15000000</dend>
+           <dfile>data/LinearSlab_drho20_30Degree_500km.csv</dfile>
+        </disp>
+        <disp>
+           <dstart>15000000</dstart>
+           <dend>30000000</dend>
+           <dfile>data/LinearSlab_drho20_30Degree_1000km.csv</dfile>
+        </disp>
+     </tectonic>
+
+    <!-- Precipitation structure -->
+    <precipitation>
+        <!-- Number of precipitation events -->
+        <climates>1</climates>
+        <!-- Precipitation definition -->
+        <rain>
+            <!-- Rain start time [a] -->
+            <rstart>0.</rstart>
+            <!-- Rain end time [a] -->
+            <rend>30000000.</rend>
+            <!-- Precipitation value [m/a] - (optional) -->
+            <rval>1.0</rval>
+        </rain>
+    </precipitation>
+
+    <!-- Stream power law parameters:
+         The stream power law is a simplified form of the usual expression of
+         sediment transport by water flow, in which the transport rate is assumed
+         to be equal to the local carrying capacity, which is itself a function of
+         boundary shear stress. -->
+    <sp_law>
+        <!-- Make the distinction between purely erosive models (0) and erosion /
+            deposition ones (1). Default value is 1. -->
+        <dep>1</dep>
+        <!-- Critical slope used to force aerial deposition for alluvial plain,
+             in [m/m] (optional). -->
+        <slp_cr>0.001</slp_cr>
+        <!-- Maximum percentage of deposition at any given time interval from rivers
+             sedimentary load in alluvial plain. Value ranges between [0,1] (optional). -->
+        <perc_dep>0.5</perc_dep>
+        <!-- Maximum lake water filling thickness. This parameter is used
+             to defined maximum water level in depression area.
+             Default value is set to 200 m. -->
+        <fillmax>5000.</fillmax>
+        <!-- Values of m and n indicate how the incision rate scales
+             with bed shear stress for constant value of sediment flux
+             and sediment transport capacity.
+             Generally, m and n are both positive, and their ratio
+             (m/n) is considered to be close to 0.5 -->
+        <m>0.5</m>
+        <n>1.0</n>
+        <!-- The erodibility coefficient is scale-dependent and its value depend
+              on lithology and mean precipitation rate, channel width, flood
+              frequency, channel hydraulics. -->
+        <erodibility>5.e-7</erodibility>
+        <!-- Number of steps used to distribute marine deposit.
+             Default value is 5 (integer). -->
+        <diffnb>1</diffnb>
+        <!-- Proportion of marine sediment deposited on downstream nodes. It needs
+             to be set between ]0,1[. Default value is 0.9 (optional). -->
+        <diffprop>0.9</diffprop>
+    </sp_law>
+
+    <!-- Linear slope diffusion parameters:
+         Parameterisation of the sediment transport includes the simple creep transport
+         law which states that transport rate depends linearly on topographic gradient. -->
+    <creep>
+        <!-- Surface diffusion coefficient [m2/a] -->
+        <caerial>1</caerial>
+        <!-- Marine diffusion coefficient [m2/a] -->
+        <cmarine>5</cmarine>
+        <!-- River transported sediment diffusion
+             coefficient in marine realm [m2/a] -->
+        <criver>10.</criver>
+    </creep>
+
+    <!-- Flexural isostasy parameters:
+         Parameterisation of the flexural isostasy using the gFlex model from Wickert 2015.
+         The current wrapper limits the functionnality of the gFlex algorithm and only uses
+         the direct solver of the 2D finite difference method with the van Wees and Cloetingh
+         plate solution. -->
+    <flexure>
+        <!-- Time step used to compute the isostatic flexure. -->
+        <ftime>1000000.0</ftime>
+        <!-- Definition of the flexural grid:
+             It is possible to setup a flexural grid at a resolution higher than the one used
+             for the TIN to increase computational speed. In this case you need to define the
+             discretization along X and Y axis. By default the same resolution as the one given
+             for the DEM file is used and the following 2 parameters are not required. -->
+        <!-- Number of points along the X-axis - (optional)-->
+        <fnx>1501</fnx>
+        <!-- Number of points along the Y-axis - (optional)-->
+        <fny>501</fny>
+        <!-- Mantle density [kg/m3] -->
+        <dmantle>3300</dmantle>
+        <!-- Sediment density [kg/m3] -->
+        <dsediment>2500</dsediment>
+        <!-- Young's Modulus [Pa] -->
+        <youngMod>65E9</youngMod>
+        <!-- The lithospheric elastic thickness (Te) can be expressed as a scalar if you assume
+             a uniform thickness for the model area in this case the value is given in the next
+             parameter [m] - (optional) -->
+        <elasticH>30000.</elasticH>
+        <!-- In case where the lithospheric elastic thickness (Te) varies on the simulated region
+             you might want to use a grid defining for each points on the flexural grid the estimate
+             Te value [m]. You will need to ensure that the grid dimensions match the number of
+             points given for the flexural grid resolution - (optional) -->
+        <!-- elasticGrid>data/elasticthickness.csv</elasticGrid -->
+        <!-- In case where the lithospheric elastic thickness (Te) varies with time.
+             The elastic thickness relates to the age of the lithosphere with a simple equation that
+             results from the square-root time dependence of lithospheric cooling via thermal conduction.
+                            Te = a1 x sqrt(t) + a2
+             You will need to define the coefficient for a1 and a2 where a1 is the slope of the dependency
+             and a2 the initial elastic thickness [m] at the start of the simulation - (optional) -->
+        <elasticA1>2.7</elasticA1>
+        <elasticA2>10000.</elasticA2>
+        <!-- Finite difference boundary conditions:
+              + 0Displacement0Slope: 0-displacement-0-slope boundary condition
+              + 0Moment0Shear: "Broken plate" boundary condition: second and
+                        third derivatives of vertical displacement are 0. This
+                        is like the end of a diving board.
+              + 0Slope0Shear: First and third derivatives of vertical displacement
+                        are zero. While this does not lend itsellf so easily to
+                        physical meaning, it is helpful to aid in efforts to make
+                        boundary condition effects disappear (i.e. to emulate the
+                        NoOutsideLoads cases)
+              + Mirror: Load and elastic thickness structures reflected at boundary.
+              + Periodic: "Wrap-around" boundary condition: must be applied to both
+                        North and South and/or both East and West. This causes, for
+                        example, the edge of the eastern and western limits of the domain
+                        to act like they are next to each other in an infinite loop.
+             The boundary are defined for each edges W, E, S and N. -->
+        <boundary_W>0Slope0Shear</boundary_W>
+        <boundary_E>0Displacement0Slope</boundary_E>
+        <boundary_S>Periodic</boundary_S>
+        <boundary_N>Periodic</boundary_N>
+    </flexure>
+
+    <!-- Output folder path -->
+    <outfolder>control_case</outfolder>
+
+</badlands>
